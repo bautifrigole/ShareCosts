@@ -1,7 +1,12 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:app/function.dart';
+import 'package:app/user.dart';
 import 'package:flutter/material.dart';
+
+const String ip = "http://10.0.2.2:5000/";
+const String addUserKey = "add_user";
+const String addMoneyKey = "add_money";
+const String calculateKey = "calculate";
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,10 +16,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String id = "";
   String name = "";
-  String query = "";
-  var data;
+  String spentMoney = "";
+  String data = "";
   String output = "Initial output";
+  List<User> users = [];
 
   @override
   Widget build(BuildContext context) {
@@ -25,40 +32,44 @@ class _HomeState extends State<Home> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Text("Name: ", style: TextStyle(fontSize: 20, color: Colors.black),),
               TextField(
                 onChanged: (value) {
                   name = "name=$value";
                 },
               ),
+              TextButton(
+                  onPressed: createUser,
+                  child: const Text("Add person", style: TextStyle(fontSize: 30),)
+              ),
+              const Divider(height: 20),
+
+              const Text("ID: ", style: TextStyle(fontSize: 20, color: Colors.black),),
               TextField(
                 onChanged: (value) {
-                  query = "query=$value";
+                  var val = int.tryParse(value);
+                  if (val == null) return;
+                  id = "id=$val";
+                },
+              ),
+              const Divider(color: Colors.white,height: 20),
+              const Text("Money: ", style: TextStyle(fontSize: 20, color: Colors.black),),
+              TextField(
+                onChanged: (value) {
+                  var val = int.tryParse(value);
+                  if (val == null) return;
+                  spentMoney = "spent_money=$val";
                 },
               ),
               TextButton(
-                  onPressed: () async {
-                    var url = "http://10.0.2.2:5000/add?$query&$name";
-                    data = await fetchData(url);
-
-                    var tagsJson = jsonDecode(data) as List;
-                    List<User> users = tagsJson.map((userJson) => User.fromJson(jsonDecode(userJson))).toList();
-                    setState(() {
-                      //TODO: por cada user crear un panel donde muestre su info
-                      output = users.map((user) => user.toString()).toString();
-                    });
-                  },
-                  child: const Text("Send", style: TextStyle(fontSize: 30),)
+                  onPressed: updateUsers,
+                  child: const Text("Add money", style: TextStyle(fontSize: 30),)
               ),
+              const Divider(height: 20),
+
               Text(output, style: const TextStyle(fontSize: 40, color: Colors.cyan),),
               TextButton(
-                  onPressed: () async {
-                    var url = "http://10.0.2.2:5000/calculate";
-                    data = await fetchData(url);
-                    var decoded = jsonDecode(data);
-                    setState(() {
-                      output = decoded['output'].toString();
-                    });
-                  },
+                  onPressed: calculateCosts,
                   child: const Text("Calculate", style: TextStyle(fontSize: 30),)
               ),
             ],
@@ -67,20 +78,36 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-}
 
-class User {
-  String name = "";
-  int spentMoney = 0;
+  Future<void> createUser() async {
+    var url = "${ip+addUserKey}?$name";
+    data = await fetchData(url);
 
-  User(this.name, this.spentMoney);
-
-  factory User.fromJson(dynamic json){
-    return User(json["name"] as String, json["spent_money"] as int);
+    var tagsJson = jsonDecode(jsonDecode(data)['users']) as List;
+    users = tagsJson.map((userJson) => User.fromJson(jsonDecode(userJson))).toList();
+    setState(updateUsersInfo);
   }
 
-  @override
-  String toString() {
-    return '{ $name, $spentMoney }';
+  Future<void> updateUsers() async {
+    var url = "${ip+addMoneyKey}?$id&$spentMoney&$name";
+    data = await fetchData(url);
+
+    var tagsJson = jsonDecode(jsonDecode(data)['users']) as List;
+    users = tagsJson.map((userJson) => User.fromJson(jsonDecode(userJson))).toList();
+    setState(updateUsersInfo);
+  }
+
+  Future<void> calculateCosts() async {
+    var url = ip+calculateKey;
+    data = await fetchData(url);
+    var decoded = jsonDecode(data);
+    setState(() {
+      output = decoded['output'].toString();
+    });
+  }
+
+  void updateUsersInfo(){
+    //TODO: por cada user crear un panel donde muestre su info
+    output = users.map((user) => user.toString()).toString();
   }
 }
