@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:app/function.dart';
+import 'package:app/payment.dart';
 import 'package:app/user.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +23,7 @@ class _HomeState extends State<Home> {
   String data = "";
   String output = "Initial output";
   List<User> users = [];
+  List<Payment> payments = [];
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class _HomeState extends State<Home> {
                 },
               ),
               TextButton(
-                  onPressed: createUser,
+                  onPressed: addUser,
                   child: const Text("Add person", style: TextStyle(fontSize: 30),)
               ),
               const Divider(height: 20),
@@ -62,7 +64,7 @@ class _HomeState extends State<Home> {
                 },
               ),
               TextButton(
-                  onPressed: updateUsers,
+                  onPressed: addMoney,
                   child: const Text("Add money", style: TextStyle(fontSize: 30),)
               ),
               const Divider(height: 20),
@@ -79,7 +81,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<void> createUser() async {
+  Future<void> addUser() async {
     var url = "${ip+addUserKey}?$name";
     data = await fetchData(url);
 
@@ -88,8 +90,8 @@ class _HomeState extends State<Home> {
     setState(updateUsersInfo);
   }
 
-  Future<void> updateUsers() async {
-    var url = "${ip+addMoneyKey}?$id&$spentMoney&$name";
+  Future<void> addMoney() async {
+    var url = "${ip+addMoneyKey}?$id&$spentMoney";
     data = await fetchData(url);
 
     var tagsJson = jsonDecode(jsonDecode(data)['users']) as List;
@@ -100,9 +102,11 @@ class _HomeState extends State<Home> {
   Future<void> calculateCosts() async {
     var url = ip+calculateKey;
     data = await fetchData(url);
-    var decoded = jsonDecode(data);
+    // TODO: hay que ver si funciona esto
+    var tagsJson = jsonDecode(jsonDecode(data)['reckoning']) as List;
+    payments = tagsJson.map((payJson) => Payment.fromJson(jsonDecode(payJson))).toList();
     setState(() {
-      output = decoded['output'].toString();
+      output = payments.toString();
     });
   }
 

@@ -1,7 +1,7 @@
 class User:
     id = 0
     name = ""
-    spent_money = 0
+    spent_money = 0.0
 
     def __init__(self, new_id, name):
         self.id = new_id

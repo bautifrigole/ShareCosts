@@ -1,12 +1,12 @@
 class User {
   int id = 0;
   String name = "";
-  int spentMoney = 0;
+  double spentMoney = 0.0;
 
   User(this.id, this.name, this.spentMoney);
 
   factory User.fromJson(dynamic json){
-    int money = json["spent_money"] ?? 0;
+    double money = json["spent_money"] ?? 0;
     return User(json["id"] as int, json["name"] as String, money);
   }
 

@@ -1,6 +1,7 @@
 import json
 from flask import Flask, request
 from domain.user import User
+from domain.payment import Payment
 
 app = Flask(__name__)
 users = []
@@ -35,7 +36,12 @@ def add_money():
         print("Value error!")
 
     if exists_user(users, user_id):
-        users[user_id].add_money(spent_money)
+        divided_value = round(spent_money/len(users), 2)
+        for i in range(len(users)):
+            if i != user_id:
+                users[i].add_money(-divided_value)
+            else:
+                users[user_id].add_money(round(spent_money-divided_value, 2))
     else:
         return
 
@@ -49,7 +55,16 @@ def add_money():
 @app.route('/calculate', methods=['GET'])
 def calculate():
     d = {}
-    d['costs'] = "calculanding..."
+    payments = []
+    add_payments(users, payments)
+
+    payments_json = []
+    for p in payments:
+        p.from_user = p.from_user.__dict__
+        p.to_user = p.to_user.__dict__
+        payments_json.append(json.dumps(p.__dict__))
+
+    d['reckoning'] = json.dumps(payments_json)
     return d
 
 
@@ -58,6 +73,33 @@ def exists_user(users_list, user_id):
         if u.id == user_id:
             return True
     return False
+
+
+def add_payments(users_list, payments):
+    users_by_money = sorted(users_list, key=lambda x: x.spent_money)
+
+    for user in users_by_money:
+        if user.spent_money == 0:
+            users_by_money.remove(user)
+
+    if len(users_by_money) < 2:
+        return payments
+
+    from_user = users_by_money[0]
+    to_user = users_by_money[-1]
+    difference = to_user.spent_money+from_user.spent_money
+    if difference >= 0:
+        amount = -from_user.spent_money
+        from_user.spent_money = 0
+        to_user.spent_money = difference
+    else:
+        amount = to_user.spent_money
+        from_user.spent_money = difference
+        to_user.spent_money = 0
+
+    payment = Payment(from_user, to_user, amount)
+    payments.append(payment)
+    add_payments(users_by_money, payments)
 
 
 if __name__ == '__main__':
