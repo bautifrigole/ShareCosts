@@ -1,4 +1,4 @@
-import 'package:app/user.dart';
+import 'user.dart';
 
 class Payment {
   User fromUser;
@@ -7,9 +7,9 @@ class Payment {
 
   Payment(this.fromUser, this.toUser, this.amount);
 
-  factory Payment.fromJson(dynamic json){
-    User fromUser =  User.fromJson(json["from_user"]);
-    User toUser =  User.fromJson(json["to_user"]);
+  factory Payment.fromJson(dynamic json) {
+    User fromUser = User.fromJson(json["from_user"]);
+    User toUser = User.fromJson(json["to_user"]);
     return Payment(fromUser, toUser, json["amount"] as double);
   }
 
