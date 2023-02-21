@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:app/domain/users_group.dart';
-import 'package:app/infrastructure/function.dart';
 
 import 'package:flutter/material.dart';
 
@@ -26,7 +24,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Calculate Costs")),
+      appBar: AppBar(
+          title: const Text("Calculate Costs"),
+          backgroundColor: Colors.indigo
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         child: const Icon(Icons.add),
