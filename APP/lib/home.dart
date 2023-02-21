@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 const String ip = "http://10.0.2.2:5000/";
 const String addUserKey = "add_user";
-const String addMoneyKey = "add_money";
+const String addExpenseKey = "add_expense";
 const String calculateKey = "calculate";
 
 class Home extends StatefulWidget {
@@ -60,11 +60,11 @@ class _HomeState extends State<Home> {
                 onChanged: (value) {
                   var val = int.tryParse(value);
                   if (val == null) return;
-                  spentMoney = "spent_money=$val";
+                  spentMoney = "balance=$val";
                 },
               ),
               TextButton(
-                  onPressed: addMoney,
+                  onPressed: addExpense,
                   child: const Text("Add money", style: TextStyle(fontSize: 30),)
               ),
               const Divider(height: 20),
@@ -90,8 +90,8 @@ class _HomeState extends State<Home> {
     setState(updateUsersInfo);
   }
 
-  Future<void> addMoney() async {
-    var url = "${ip+addMoneyKey}?$id&$spentMoney";
+  Future<void> addExpense() async {
+    var url = "${ip+addExpenseKey}?$id&$spentMoney";
     data = await fetchData(url);
 
     var tagsJson = jsonDecode(jsonDecode(data)['users']) as List;
@@ -102,16 +102,22 @@ class _HomeState extends State<Home> {
   Future<void> calculateCosts() async {
     var url = ip+calculateKey;
     data = await fetchData(url);
-    // TODO: hay que ver si funciona esto
+
     var tagsJson = jsonDecode(jsonDecode(data)['reckoning']) as List;
     payments = tagsJson.map((payJson) => Payment.fromJson(jsonDecode(payJson))).toList();
     setState(() {
-      output = payments.toString();
+      output = "";
+      for (var pay in payments) {
+        output += "$pay\n";
+      }
     });
   }
 
   void updateUsersInfo(){
     //TODO: por cada user crear un panel donde muestre su info
-    output = users.map((user) => user.toString()).toString();
+    output = "";
+    for (var user in users) {
+      output += "$user\n";
+    }
   }
 }

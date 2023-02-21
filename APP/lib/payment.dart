@@ -9,9 +9,8 @@ class Payment {
   Payment(this.fromUser, this.toUser, this.amount);
 
   factory Payment.fromJson(dynamic json){
-    // TODO: hay que ver si funciona esto
-    User fromUser =  User.fromJson(jsonDecode(json["from_user"]));
-    User toUser =  User.fromJson(jsonDecode(json["to_user"]));
+    User fromUser =  User.fromJson(json["from_user"]);
+    User toUser =  User.fromJson(json["to_user"]);
     return Payment(fromUser, toUser, json["amount"] as double);
   }
 
@@ -19,6 +18,6 @@ class Payment {
   String toString() {
     String fromName = fromUser.name;
     String toName = toUser.name;
-    return '{ $fromName must pay $amount to $toName }';
+    return "$fromName -> $toName: \$$amount";
   }
 }

@@ -1,17 +1,17 @@
 class User {
   int id = 0;
   String name = "";
-  double spentMoney = 0.0;
+  double balance = 0.0;
 
-  User(this.id, this.name, this.spentMoney);
+  User(this.id, this.name, this.balance);
 
   factory User.fromJson(dynamic json){
-    double money = json["spent_money"] ?? 0;
-    return User(json["id"] as int, json["name"] as String, money);
+    var money = json["balance"] ?? 0;
+    return User(json["id"] as int, json["name"] as String, money.toDouble());
   }
 
   @override
   String toString() {
-    return '{ $id, $name, $spentMoney }';
+    return '$name: $balance';
   }
 }
