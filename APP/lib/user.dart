@@ -12,6 +12,7 @@ class User {
 
   @override
   String toString() {
-    return '$name: $balance';
+    double rounded = double.parse((balance).toStringAsFixed(2));
+    return '$name: $rounded';
   }
 }

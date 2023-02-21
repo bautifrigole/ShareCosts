@@ -1,4 +1,5 @@
 import json
+import math
 from flask import Flask, request
 from domain.user import User
 from domain.payment import Payment
@@ -40,7 +41,7 @@ def add_expense():
 
     if exists_user(users, user_id):
         expenses.append(Expense(description, users[user_id], amount))
-        divided_value = round(amount/len(users), 2)
+        divided_value = round(amount/len(users), 6)
         for i in range(len(users)):
             if i != user_id:
                 users[i].add_balance(-divided_value)
@@ -86,9 +87,10 @@ def list_to_json(obj_list):
 
 def add_payments(users_list, payments):
     users_by_money = sorted(users_list, key=lambda x: x.balance)
+    error = 0.0001
 
     for user in users_by_money:
-        if user.balance == 0:
+        if abs(user.balance) <= error:
             users_by_money.remove(user)
 
     if len(users_by_money) < 2:
@@ -96,7 +98,7 @@ def add_payments(users_list, payments):
 
     from_user = users_by_money[0]
     to_user = users_by_money[-1]
-    difference = to_user.balance + from_user.balance
+    difference = round((to_user.balance + from_user.balance), 6)
     if difference >= 0:
         amount = -from_user.balance
         from_user.balance = 0

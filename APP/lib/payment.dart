@@ -1,5 +1,4 @@
 import 'package:app/user.dart';
-import 'dart:convert';
 
 class Payment {
   User fromUser;
@@ -18,6 +17,7 @@ class Payment {
   String toString() {
     String fromName = fromUser.name;
     String toName = toUser.name;
-    return "$fromName -> $toName: \$$amount";
+    double rounded = double.parse((amount).toStringAsFixed(2));
+    return "$fromName -> $toName: \$$rounded";
   }
 }
