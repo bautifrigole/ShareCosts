@@ -3,7 +3,7 @@ class User:
     name = ""
     balance = 0.0
 
-    def __init__(self, new_id, name):
+    def __init__(self, new_id: int, name: str):
         self.id = new_id
         self.name = name
 
