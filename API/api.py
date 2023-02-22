@@ -13,8 +13,10 @@ expenses = []
 def add_user():
     d = {}
     name = request.args.get('name', None)
-    current_id = len(users)
+    if name is None or exists_name(users, name):
+        return d
 
+    current_id = len(users)
     new_user = User(current_id, name)
     users.append(new_user)
 
@@ -70,9 +72,16 @@ def calculate():
     return d
 
 
-def exists_user(users_list, user_id):
+def exists_user(users_list, user_id: int):
     for u in users_list:
         if u.id == user_id:
+            return True
+    return False
+
+
+def exists_name(users_list, name: str):
+    for u in users_list:
+        if u.name == name:
             return True
     return False
 
