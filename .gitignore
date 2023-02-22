@@ -9,10 +9,11 @@ windows
 
 # PyCache
 domain/__pycache__/
+*.pyc
+*.pyo
 */__pycache__/
 *.py[cod]
 *$py.class
-.pyc
 
 # Miscellaneous
 *.class
