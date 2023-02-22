@@ -1,4 +1,6 @@
+import 'package:app/app_alerts.dart';
 import 'package:app/domain/domain.dart';
+import 'package:app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -20,11 +22,40 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
           title: const Text("Calculate Costs"),
-          backgroundColor: Colors.indigo
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
+          backgroundColor: AppTheme.primary),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          FloatingActionButton(
+            child: const Icon(
+              Icons.add_card,
+              color: Colors.white,
+              size: 35,
+            ),
+            onPressed: () => AppAlerts.displayDialogAndroid(context,
+                const Text("Expense"), AppAlerts.expenseInput(), addExpense),
+          ),
+          ElevatedButton(
+            child: const Padding(
+              padding: EdgeInsets.all(15.0),
+              child: Text(
+                "Calculate",
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+            onPressed: () {},
+          ),
+          FloatingActionButton(
+            child: const Icon(
+              Icons.person_add,
+              color: Colors.white,
+              size: 25,
+            ),
+            onPressed: () => AppAlerts.displayDialogAndroid(context,
+                const Text("New User"), AppAlerts.nameInput(), addUser),
+          ),
+        ],
       ),
       body: Center(
         child: Container(

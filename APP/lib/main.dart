@@ -1,4 +1,5 @@
 import 'package:app/screens/home_screen.dart';
+import 'package:app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 void main(List<String> args) => runApp(new MyApp());
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const Home(),
-      theme: ThemeData.dark(),
+      theme: AppTheme.darkTheme,
     );
   }
 }
