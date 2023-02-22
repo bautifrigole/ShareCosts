@@ -7,3 +7,6 @@ class Expense:
         self.description = description
         self.payer_user = payer_user
         self.amount = amount
+
+    def to_json(self):
+        return {"description": self.description, "payer_user": self.payer_user.to_json(), "amount": self.amount}

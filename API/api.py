@@ -1,5 +1,4 @@
 import json
-import math
 from flask import Flask, request
 from domain.user import User
 from domain.payment import Payment
@@ -21,7 +20,7 @@ def add_user():
 
     users_json = []
     for u in users:
-        users_json.append(json.dumps(u.__dict__))
+        users_json.append(json.dumps(u.to_json()))
     d['users'] = json.dumps(users_json)
     return d
 
@@ -51,7 +50,7 @@ def add_expense():
         return
 
     d['users'] = list_to_json(users)
-    #d['expenses'] = list_to_json(expenses)
+    d['expenses'] = list_to_json(expenses)
     return d
 
 
@@ -63,11 +62,11 @@ def calculate():
 
     payments_json = []
     for p in payments:
-        p.from_user = p.from_user.__dict__
-        p.to_user = p.to_user.__dict__
-        payments_json.append(json.dumps(p.__dict__))
+        p.from_user = p.from_user.to_json()
+        p.to_user = p.to_user.to_json()
+        payments_json.append(json.dumps(p.to_json()))
 
-    d['reckoning'] = json.dumps(payments_json)
+    d['payments'] = json.dumps(payments_json)
     return d
 
 
@@ -81,7 +80,7 @@ def exists_user(users_list, user_id):
 def list_to_json(obj_list):
     json_list = []
     for obj in obj_list:
-        json_list.append(json.dumps(obj.__dict__))
+        json_list.append(json.dumps(obj.to_json()))
     return json.dumps(json_list)
 
 

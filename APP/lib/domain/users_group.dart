@@ -1,41 +1,48 @@
 import 'dart:convert';
-
-import '../infrastructure/function.dart';
+import '../infrastructure/server.dart';
 import 'domain.dart';
 
 class UsersGroup {
-  String data = "";
   String output = "Initial output";
   List<User> users = [];
   List<Payment> payments = [];
+  List<Expense> expenses = [];
 
   Future<void> addUser(String name) async {
-    var url = "${ip + addUserKey}?$name";
-    data = await fetchData(url);
-
-    var tagsJson = jsonDecode(jsonDecode(data)['users']) as List;
-    users = tagsJson
-        .map((userJson) => User.fromJson(jsonDecode(userJson)))
-        .toList();
+    var url = "${ip + addUserKey}?name=$name";
+    decodeUsers(await fetchData(url));
   }
 
   Future<void> addExpense(String id, String spentMoney) async {
-    var url = "${ip + addExpenseKey}?$id&$spentMoney";
-    data = await fetchData(url);
-
-    var tagsJson = jsonDecode(jsonDecode(data)['users']) as List;
-    users = tagsJson
-        .map((userJson) => User.fromJson(jsonDecode(userJson)))
-        .toList();
+    var url = "${ip + addExpenseKey}?id=$id&balance=$spentMoney&description=desc";
+    String data = await fetchData(url);
+    decodeUsers(data);
+    decodeExpenses(data);
   }
 
   Future<void> calculateCosts() async {
     var url = ip + calculateKey;
-    data = await fetchData(url);
+    decodePayments(await fetchData(url));
+  }
 
-    var tagsJson = jsonDecode(jsonDecode(data)['reckoning']) as List;
+  void decodeUsers(String data){
+    var tagsJson = jsonDecode(jsonDecode(data)['users']) as List;
+    users = tagsJson
+        .map((userJson) => User.fromJson(jsonDecode(userJson)))
+        .toList();
+  }
+
+  void decodePayments(String data){
+    var tagsJson = jsonDecode(jsonDecode(data)['payments']) as List;
     payments = tagsJson
         .map((payJson) => Payment.fromJson(jsonDecode(payJson)))
+        .toList();
+  }
+
+  void decodeExpenses(String data){
+    var tagsJson = jsonDecode(jsonDecode(data)['expenses']) as List;
+    expenses = tagsJson
+        .map((expJson) => Expense.fromJson(jsonDecode(expJson)))
         .toList();
   }
 

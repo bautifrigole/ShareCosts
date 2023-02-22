@@ -1,11 +1,5 @@
-import 'package:app/domain/users_group.dart';
-
+import 'package:app/domain/domain.dart';
 import 'package:flutter/material.dart';
-
-const String ip = "http://10.0.2.2:5000/";
-const String addUserKey = "add_user";
-const String addExpenseKey = "add_expense";
-const String calculateKey = "calculate";
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -15,9 +9,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String id = "";
+  int id = 0;
   String name = "";
-  String spentMoney = "";
+  int spentMoney = 0;
   String output = "";
 
   UsersGroup group = UsersGroup();
@@ -44,7 +38,7 @@ class _HomeState extends State<Home> {
               ),
               TextField(
                 onChanged: (value) {
-                  name = "name=$value";
+                  name = value;
                 },
               ),
               TextButton(
@@ -62,7 +56,7 @@ class _HomeState extends State<Home> {
                 onChanged: (value) {
                   var val = int.tryParse(value);
                   if (val == null) return;
-                  id = "id=$val";
+                  id = val;
                 },
               ),
               const Divider(color: Colors.white, height: 20),
@@ -74,7 +68,7 @@ class _HomeState extends State<Home> {
                 onChanged: (value) {
                   var val = int.tryParse(value);
                   if (val == null) return;
-                  spentMoney = "balance=$val";
+                  spentMoney = val;
                 },
               ),
               TextButton(
@@ -109,7 +103,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> addExpense() async {
-    await group.addExpense(id, spentMoney);
+    await group.addExpense(id.toString(), spentMoney.toString());
     setState(() {
       output = group.usersToString();
     });
