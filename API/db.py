@@ -2,11 +2,6 @@ import mariadb
 import sys
 
 def connect():
-    #user: str = "facu1"
-    #password: str = "1234"
-    #host: str = "127.0.0.1"
-    #port: str = "3306"
-    #database: str = "CalculateCost"
 
     try:
         conn = mariadb.connect(
@@ -41,12 +36,6 @@ def get_data(sql: str):
         connection: mariadb.Connection = connect()
         cursor: mariadb.Cursor = connection.cursor()
         cursor.execute(sql)
-        #for (ID_user,Name,Balance,ID_group) in cursor:
-            #print(f"ID: {ID_user}, Name: {Name}, Balance: {Balance}, ID_group: {ID_group} ")
     except mariadb.Error as e:
         connection.close()
         print(f"Error: {e}")
-    #return connection
-
-#print(post_data("INSERT INTO User(ID_user,Name,Balance,ID_group) values (3,'algo',231,2)"))
-#conn = get_data("SELECT * FROM User")
