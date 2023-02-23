@@ -40,14 +40,15 @@ def add_expense():
     except ValueError:
         print("Value error!")
 
-    if exists_user(users, user_id):
-        expenses.append(Expense(description, users[user_id], amount))
+    user_index = exists_user(users, user_id)
+    if user_index is not None:
+        expenses.append(Expense(description, users[user_index], amount))
         divided_value = round(amount/len(users), 6)
         for i in range(len(users)):
-            if i != user_id:
+            if i != user_index:
                 users[i].add_balance(-divided_value)
             else:
-                users[user_id].add_balance(round(amount - divided_value, 2))
+                users[user_index].add_balance(round(amount - divided_value, 2))
     else:
         return
 
@@ -67,10 +68,10 @@ def calculate():
 
 
 def exists_user(users_list, user_id: int):
-    for u in users_list:
-        if u.id == user_id:
-            return True
-    return False
+    for i in range(len(users)):
+        if users_list[i].id == user_id:
+            return i
+    return None
 
 
 def exists_name(users_list, name: str):
@@ -90,7 +91,6 @@ def list_to_json(obj_list):
 def add_payments(users_list, payments):
     users_by_money = sorted(users_list, key=lambda x: x.balance)
     error = 0.0001
-
     for user in users_by_money:
         if abs(user.balance) <= error:
             users_by_money.remove(user)
@@ -98,9 +98,13 @@ def add_payments(users_list, payments):
     if len(users_by_money) < 2:
         return payments
 
-    from_user = users_by_money[0]
-    to_user = users_by_money[-1]
+    payments.append(create_payment(users_by_money[0], users_by_money[-1]))
+    add_payments(users_by_money, payments)
+
+
+def create_payment(from_user: User, to_user: User):
     difference = round((to_user.balance + from_user.balance), 6)
+
     if difference >= 0:
         amount = -from_user.balance
         from_user.balance = 0
@@ -110,9 +114,7 @@ def add_payments(users_list, payments):
         from_user.balance = difference
         to_user.balance = 0
 
-    payment = Payment(from_user, to_user, amount)
-    payments.append(payment)
-    add_payments(users_by_money, payments)
+    return Payment(from_user, to_user, amount)
 
 
 if __name__ == '__main__':

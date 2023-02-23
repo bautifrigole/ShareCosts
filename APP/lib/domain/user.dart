@@ -15,4 +15,9 @@ class User {
     double rounded = double.parse((balance).toStringAsFixed(2));
     return '$name: $rounded';
   }
+
+  Map<String,Object> toDict() {
+    double rounded = double.parse((balance).toStringAsFixed(2));
+    return {"id": id, "name": name, "balance": rounded};
+  }
 }

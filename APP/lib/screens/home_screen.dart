@@ -1,7 +1,9 @@
 import 'package:app/app_alerts.dart';
+import 'package:app/users_dropdown.dart';
 import 'package:app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:app/infrastructure/user_data.dart';
+import 'package:snippet_coder_utils/FormHelper.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -34,7 +36,10 @@ class _HomeState extends State<Home> {
             ),
             onPressed: () => AppAlerts.displayDialogAndroid(context,
                 const Text("Expense"),
-                AppAlerts.expenseInput(onChangedInputID, onChangedInputSpentMoney),
+                AppAlerts.expenseInput(
+                    usersDropdown(context, id, onChangedInputID),
+                    onChangedInputSpentMoney,
+                ),
                 sendNewExpense),
           ),
           ElevatedButton(
