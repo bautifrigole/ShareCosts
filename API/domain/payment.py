@@ -10,3 +10,6 @@ class Payment:
         self.from_user = from_user
         self.to_user = to_user
         self.amount = amount
+
+    def to_json(self):
+        return {"from_user": self.from_user.to_json(), "to_user": self.to_user.to_json(), "amount": self.amount}

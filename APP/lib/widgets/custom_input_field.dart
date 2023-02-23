@@ -8,12 +8,15 @@ class CustomInputField extends StatelessWidget {
   final IconData? suffixIcon;
   final TextInputType? keyboardType;
   final bool obscureText;
+  String textValue = "";
+  Function(String?) onChanged;
 
   //final String formProperty;
   //final Map<String, String> formValues;
 
-  const CustomInputField({
+  CustomInputField({
     Key? key,
+    required this.onChanged,
     this.hintText,
     this.labelText,
     this.helperText,
@@ -33,12 +36,10 @@ class CustomInputField extends StatelessWidget {
       textCapitalization: TextCapitalization.words,
       keyboardType: keyboardType,
       obscureText: obscureText,
-      onChanged: (value) {
-        //formValues[formProperty] = value;
-      },
+      onChanged: onChanged,
       validator: (value) {
         if (value == null) return 'Required field';
-        return value.length < 3 ? 'Enter a minimum of 3 characters' : null;
+        return value.length < 1 ? 'Enter a minimum of 1 characters' : null;
       },
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(

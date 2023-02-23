@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class AppAlerts {
   static void displayDialogAndroid(
-      BuildContext context, Text? title, Widget content, Function addFunction) {
+      BuildContext context, Text? title, Widget content, Future<void> Function() function) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -24,7 +24,10 @@ class AppAlerts {
                     style: TextStyle(color: Colors.red),
                   )),
               TextButton(
-                  onPressed: () => addFunction,
+                  onPressed: () {
+                    function();
+                    Navigator.pop(context);
+                    },
                   child: Text(
                     "Add",
                     style: TextStyle(color: AppTheme.textPrimary),
@@ -34,31 +37,34 @@ class AppAlerts {
         });
   }
 
-  static Column nameInput() {
+  static Column nameInput(Function(String?) onChanged) {
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: const [
+        children: [
           CustomInputField(
             labelText: "Name",
             hintText: "Example: John",
+            onChanged: onChanged,
           )
         ]);
   }
 
-  static Column expenseInput() {
+  static Column expenseInput(Function(String?) onChangedID, Function(String?) onChangedExpense) {
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: const [
+        children: [
           CustomInputField(
             labelText: "ID",
             hintText: "Example: 0",
+            onChanged: onChangedID,
           ),
           SizedBox(height: 20),
           CustomInputField(
             labelText: "Expense",
             hintText: "Example: 100",
+            onChanged: onChangedExpense,
           )
         ]);
   }

@@ -1,7 +1,7 @@
 import 'package:app/app_alerts.dart';
-import 'package:app/domain/domain.dart';
 import 'package:app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:app/infrastructure/user_data.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -14,9 +14,8 @@ class _HomeState extends State<Home> {
   int id = 0;
   String name = "";
   int spentMoney = 0;
-  String output = "";
+  String output = "-";
 
-  UsersGroup group = UsersGroup();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,9 +33,12 @@ class _HomeState extends State<Home> {
               size: 35,
             ),
             onPressed: () => AppAlerts.displayDialogAndroid(context,
-                const Text("Expense"), AppAlerts.expenseInput(), addExpense),
+                const Text("Expense"),
+                AppAlerts.expenseInput(onChangedInputID, onChangedInputSpentMoney),
+                sendNewExpense),
           ),
           ElevatedButton(
+            onPressed: sendCalculateCosts,
             child: const Padding(
               padding: EdgeInsets.all(15.0),
               child: Text(
@@ -44,7 +46,6 @@ class _HomeState extends State<Home> {
                 style: TextStyle(fontSize: 20),
               ),
             ),
-            onPressed: () {},
           ),
           FloatingActionButton(
             child: const Icon(
@@ -53,7 +54,9 @@ class _HomeState extends State<Home> {
               size: 25,
             ),
             onPressed: () => AppAlerts.displayDialogAndroid(context,
-                const Text("New User"), AppAlerts.nameInput(), addUser),
+                const Text("New User"),
+                AppAlerts.nameInput(onChangedInputName),
+                sendNewUser),
           ),
         ],
       ),
@@ -63,62 +66,10 @@ class _HomeState extends State<Home> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                "Name: ",
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-              TextField(
-                onChanged: (value) {
-                  name = value;
-                },
-              ),
-              TextButton(
-                  onPressed: addUser,
-                  child: const Text(
-                    "Add person",
-                    style: TextStyle(fontSize: 30),
-                  )),
-              const Divider(height: 20),
-              const Text(
-                "ID: ",
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-              TextField(
-                onChanged: (value) {
-                  var val = int.tryParse(value);
-                  if (val == null) return;
-                  id = val;
-                },
-              ),
-              const Divider(color: Colors.white, height: 20),
-              const Text(
-                "Money: ",
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-              TextField(
-                onChanged: (value) {
-                  var val = int.tryParse(value);
-                  if (val == null) return;
-                  spentMoney = val;
-                },
-              ),
-              TextButton(
-                  onPressed: addExpense,
-                  child: const Text(
-                    "Add money",
-                    style: TextStyle(fontSize: 30),
-                  )),
-              const Divider(height: 20),
               Text(
                 output,
-                style: const TextStyle(fontSize: 40, color: Colors.cyan),
+                style: const TextStyle(fontSize: 40, color: Colors.white),
               ),
-              TextButton(
-                  onPressed: calculateCosts,
-                  child: const Text(
-                    "Calculate",
-                    style: TextStyle(fontSize: 30),
-                  )),
             ],
           ),
         ),
@@ -126,24 +77,40 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Future<void> addUser() async {
-    await group.addUser(name);
+  Future<void> sendNewUser() async {
+    await addUser(name);
     setState(() {
-      output = group.usersToString();
+      output = listToString(users);
     });
   }
 
-  Future<void> addExpense() async {
-    await group.addExpense(id.toString(), spentMoney.toString());
+  Future<void> sendNewExpense() async {
+    await addExpense(id.toString(), spentMoney.toString());
     setState(() {
-      output = group.usersToString();
+      output = listToString(users);
     });
   }
 
-  Future<void> calculateCosts() async {
-    await group.calculateCosts();
+  Future<void> sendCalculateCosts() async {
+    await calculateCosts();
     setState(() {
-      output = group.paymentsToString();
+      output = listToString(payments);
     });
+  }
+
+  dynamic onChangedInputName(String? value) {
+    name = value!;
+  }
+
+  dynamic onChangedInputID(String? value) {
+    var val = int.tryParse(value!);
+    if (val == null) return;
+    id = val;
+  }
+
+  dynamic onChangedInputSpentMoney(String? value) {
+    var val = int.tryParse(value!);
+    if (val == null) return;
+    spentMoney = val;
   }
 }

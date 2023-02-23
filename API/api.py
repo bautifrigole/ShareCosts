@@ -62,13 +62,7 @@ def calculate():
     payments = []
     add_payments(users, payments)
 
-    payments_json = []
-    for p in payments:
-        p.from_user = p.from_user.to_json()
-        p.to_user = p.to_user.to_json()
-        payments_json.append(json.dumps(p.to_json()))
-
-    d['payments'] = json.dumps(payments_json)
+    d['payments'] = list_to_json(payments)
     return d
 
 
