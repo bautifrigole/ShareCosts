@@ -5,13 +5,27 @@ from domain.payment import Payment
 from domain.expense import Expense
 
 app = Flask(__name__)
+d = {}
 users = []
 expenses = []
+payments = []
+
+
+@app.route('/info', methods=['GET'])
+def get_info():
+    return get_dict_info()
+
+
+@app.route('/clear_info', methods=['GET'])
+def clear_info():
+    users.clear()
+    expenses.clear()
+    payments.clear()
+    return get_dict_info()
 
 
 @app.route('/add_user', methods=['GET'])
 def add_user():
-    d = {}
     name = request.args.get('name', None)
     if name is None or exists_name(users, name):
         return d
@@ -20,16 +34,11 @@ def add_user():
     new_user = User(current_id, name)
     users.append(new_user)
 
-    users_json = []
-    for u in users:
-        users_json.append(json.dumps(u.to_json()))
-    d['users'] = json.dumps(users_json)
-    return d
+    return get_dict_info()
 
 
 @app.route('/add_expense', methods=['GET'])
 def add_expense():
-    d = {}
     user_id = request.args.get('id', None)
     amount = request.args.get('balance', None)
     description = request.args.get('description', None)
@@ -52,19 +61,17 @@ def add_expense():
     else:
         return
 
-    d['users'] = list_to_json(users)
-    d['expenses'] = list_to_json(expenses)
-    return d
+    return get_dict_info()
 
 
 @app.route('/calculate', methods=['GET'])
 def calculate():
-    d = {}
-    payments = []
     add_payments(users, payments)
+    return get_dict_info()
 
-    d['payments'] = list_to_json(payments)
-    return d
+
+def get_dict_info():
+    return {'users': list_to_json(users), 'expenses': list_to_json(expenses), 'payments': list_to_json(payments)}
 
 
 def exists_user(users_list, user_id: int):
