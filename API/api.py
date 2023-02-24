@@ -5,13 +5,27 @@ from domain.payment import Payment
 from domain.expense import Expense
 
 app = Flask(__name__)
+d = {}
 users = []
 expenses = []
+payments = []
+
+
+@app.route('/info', methods=['GET'])
+def get_info():
+    return get_dict_info()
+
+
+@app.route('/clear_info', methods=['GET'])
+def clear_info():
+    users.clear()
+    expenses.clear()
+    payments.clear()
+    return get_dict_info()
 
 
 @app.route('/add_user', methods=['GET'])
 def add_user():
-    d = {}
     name = request.args.get('name', None)
     if name is None or exists_name(users, name):
         return d
@@ -20,16 +34,11 @@ def add_user():
     new_user = User(current_id, name)
     users.append(new_user)
 
-    users_json = []
-    for u in users:
-        users_json.append(json.dumps(u.to_json()))
-    d['users'] = json.dumps(users_json)
-    return d
+    return get_dict_info()
 
 
 @app.route('/add_expense', methods=['GET'])
 def add_expense():
-    d = {}
     user_id = request.args.get('id', None)
     amount = request.args.get('balance', None)
     description = request.args.get('description', None)
@@ -40,37 +49,36 @@ def add_expense():
     except ValueError:
         print("Value error!")
 
-    if exists_user(users, user_id):
-        expenses.append(Expense(description, users[user_id], amount))
+    user_index = exists_user(users, user_id)
+    if user_index is not None:
+        expenses.append(Expense(description, users[user_index], amount))
         divided_value = round(amount/len(users), 6)
         for i in range(len(users)):
-            if i != user_id:
+            if i != user_index:
                 users[i].add_balance(-divided_value)
             else:
-                users[user_id].add_balance(round(amount - divided_value, 2))
+                users[user_index].add_balance(round(amount - divided_value, 2))
     else:
         return
 
-    d['users'] = list_to_json(users)
-    d['expenses'] = list_to_json(expenses)
-    return d
+    return get_dict_info()
 
 
 @app.route('/calculate', methods=['GET'])
 def calculate():
-    d = {}
-    payments = []
     add_payments(users, payments)
+    return get_dict_info()
 
-    d['payments'] = list_to_json(payments)
-    return d
+
+def get_dict_info():
+    return {'users': list_to_json(users), 'expenses': list_to_json(expenses), 'payments': list_to_json(payments)}
 
 
 def exists_user(users_list, user_id: int):
-    for u in users_list:
-        if u.id == user_id:
-            return True
-    return False
+    for i in range(len(users)):
+        if users_list[i].id == user_id:
+            return i
+    return None
 
 
 def exists_name(users_list, name: str):
@@ -90,7 +98,6 @@ def list_to_json(obj_list):
 def add_payments(users_list, payments):
     users_by_money = sorted(users_list, key=lambda x: x.balance)
     error = 0.0001
-
     for user in users_by_money:
         if abs(user.balance) <= error:
             users_by_money.remove(user)
@@ -98,9 +105,13 @@ def add_payments(users_list, payments):
     if len(users_by_money) < 2:
         return payments
 
-    from_user = users_by_money[0]
-    to_user = users_by_money[-1]
+    payments.append(create_payment(users_by_money[0], users_by_money[-1]))
+    add_payments(users_by_money, payments)
+
+
+def create_payment(from_user: User, to_user: User):
     difference = round((to_user.balance + from_user.balance), 6)
+
     if difference >= 0:
         amount = -from_user.balance
         from_user.balance = 0
@@ -110,9 +121,7 @@ def add_payments(users_list, payments):
         from_user.balance = difference
         to_user.balance = 0
 
-    payment = Payment(from_user, to_user, amount)
-    payments.append(payment)
-    add_payments(users_by_money, payments)
+    return Payment(from_user, to_user, amount)
 
 
 if __name__ == '__main__':

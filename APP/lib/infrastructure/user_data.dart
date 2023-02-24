@@ -6,6 +6,22 @@ List<User> users = [];
 List<Payment> payments = [];
 List<Expense> expenses = [];
 
+Future<void> updateInfo() async {
+  var url = ip + infoKey;
+  String data = await fetchData(url);
+  decodeUsers(data);
+  decodeExpenses(data);
+  decodePayments(data);
+}
+
+Future<void> clearInfo() async {
+  var url = ip + clearKey;
+  fetchData(url);
+  users.clear();
+  expenses.clear();
+  payments.clear();
+}
+
 Future<void> addUser(String name) async {
   var url = "${ip + addUserKey}?name=$name";
   decodeUsers(await fetchData(url));

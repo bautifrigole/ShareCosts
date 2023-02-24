@@ -3,6 +3,8 @@ import 'package:app/widgets/custom_input_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'users_dropdown.dart';
+
 class AppAlerts {
   static void displayDialogAndroid(
       BuildContext context, Text? title, Widget content, Future<void> Function() function) {
@@ -50,16 +52,15 @@ class AppAlerts {
         ]);
   }
 
-  static Column expenseInput(Function(String?) onChangedID, Function(String?) onChangedExpense) {
+  static Column expenseInput(
+      Widget usersDropdown,
+      Function(String?) onChangedExpense,
+      ) {
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          CustomInputField(
-            labelText: "ID",
-            hintText: "Example: 0",
-            onChanged: onChangedID,
-          ),
+          usersDropdown,
           SizedBox(height: 20),
           CustomInputField(
             labelText: "Expense",

@@ -1,4 +1,5 @@
 import 'package:app/app_alerts.dart';
+import 'package:app/users_dropdown.dart';
 import 'package:app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:app/infrastructure/user_data.dart';
@@ -27,6 +28,32 @@ class _HomeState extends State<Home> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           FloatingActionButton(
+              onPressed: () {
+                updateInfo();
+                setState(() {
+                  output = listToString(users);
+                });
+              },
+            child: const Icon(
+              Icons.update,
+              color: Colors.white,
+              size: 35,
+            ),
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              clearInfo();
+              setState(() {
+                output = listToString(users);
+              });
+            },
+            child: const Icon(
+              Icons.clear_rounded,
+              color: Colors.white,
+              size: 35,
+            ),
+          ),
+          FloatingActionButton(
             child: const Icon(
               Icons.add_card,
               color: Colors.white,
@@ -34,7 +61,10 @@ class _HomeState extends State<Home> {
             ),
             onPressed: () => AppAlerts.displayDialogAndroid(context,
                 const Text("Expense"),
-                AppAlerts.expenseInput(onChangedInputID, onChangedInputSpentMoney),
+                AppAlerts.expenseInput(
+                    usersDropdown(context, id, onChangedInputID),
+                    onChangedInputSpentMoney,
+                ),
                 sendNewExpense),
           ),
           ElevatedButton(
