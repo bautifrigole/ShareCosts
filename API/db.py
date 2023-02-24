@@ -27,7 +27,7 @@ def post_data(sql: str):
         connection.close()
         print(f"Error: {e}")
     connection.commit()
-    print(f"Last inserted ID: {cursor.lastrowid}")
+    #print(f"Last inserted ID: {cursor.lastrowid}")
     connection.close()
     return True
 
@@ -36,6 +36,9 @@ def get_data(sql: str):
         connection: mariadb.Connection = connect()
         cursor: mariadb.Cursor = connection.cursor()
         cursor.execute(sql)
+        data = cursor.fetchall()
     except mariadb.Error as e:
         connection.close()
         print(f"Error: {e}")
+    connection.close()
+    return data
