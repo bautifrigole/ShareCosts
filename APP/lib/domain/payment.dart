@@ -1,22 +1,21 @@
-import 'user.dart';
+import 'package:app/infrastructure/user_data.dart';
 
 class Payment {
-  User fromUser;
-  User toUser;
+  int fromUserID;
+  int toUserID;
   double amount = 0.0;
 
-  Payment(this.fromUser, this.toUser, this.amount);
+  Payment(this.fromUserID, this.toUserID, this.amount);
 
   factory Payment.fromJson(dynamic json) {
-    User fromUser = User.fromJson(json["from_user"]);
-    User toUser = User.fromJson(json["to_user"]);
-    return Payment(fromUser, toUser, json["amount"] as double);
+    return Payment(json["from_user_id"] as int,
+        json["to_user_id"] as int, json["amount"] as double);
   }
 
   @override
   String toString() {
-    String fromName = fromUser.name;
-    String toName = toUser.name;
+    String fromName = getUserByID(fromUserID).name;
+    String toName = getUserByID(toUserID).name;
     double rounded = double.parse((amount).toStringAsFixed(2));
     return "$fromName -> $toName: \$$rounded";
   }

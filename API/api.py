@@ -1,5 +1,6 @@
 import json
 from flask import Flask, request
+from copy import deepcopy
 from domain.user import User
 from domain.payment import Payment
 from domain.expense import Expense
@@ -66,7 +67,8 @@ def add_expense():
 
 @app.route('/calculate', methods=['GET'])
 def calculate():
-    add_payments(users, payments)
+    payments.clear()
+    add_payments(deepcopy(users), payments)
     return get_dict_info()
 
 
@@ -121,7 +123,7 @@ def create_payment(from_user: User, to_user: User):
         from_user.balance = difference
         to_user.balance = 0
 
-    return Payment(from_user, to_user, amount)
+    return Payment(from_user.id, to_user.id, amount)
 
 
 if __name__ == '__main__':

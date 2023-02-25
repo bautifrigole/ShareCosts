@@ -67,3 +67,7 @@ String listToString(List<Object> list) {
   }
   return output;
 }
+
+User getUserByID(int id){
+  return users.firstWhere((u) => u.id == id);
+}
