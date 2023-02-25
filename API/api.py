@@ -46,7 +46,7 @@ def add_expense():
 
     try:
         user_id = int(user_id)
-        amount = int(amount)
+        amount = float(amount)
     except ValueError:
         print("Value error!")
 

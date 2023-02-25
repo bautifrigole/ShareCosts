@@ -1,5 +1,4 @@
 import db
-import mariadb
 import domain.expense as expense
 import domain.user as user
 import db_group as db_g

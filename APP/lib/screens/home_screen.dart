@@ -1,4 +1,6 @@
 import 'package:app/app_alerts.dart';
+import 'package:app/domain/domain.dart';
+import 'package:app/expense_panel.dart';
 import 'package:app/users_dropdown.dart';
 import 'package:app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -99,6 +101,8 @@ class _HomeState extends State<Home> {
         },
         child: ListView(
           children: [
+            SizedBox(height: 10),
+            expensePanel(context, Expense("Puto el que lee", User(0, "Fran gato", 0.0), 2100)),
             Container(
               padding: const EdgeInsets.all(20),
               child: Column(

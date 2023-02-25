@@ -1,8 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'user_data.dart';
 
-//const String ip = "http://bautifrigole.pythonanywhere.com/";
-const String ip = "http://10.0.2.2:5000/";
+const String ip = "http://bautifrigole.pythonanywhere.com/";
+//const String ip = "http://10.0.2.2:5000/";
 const String addUserKey = "add_user";
 const String addExpenseKey = "add_expense";
 const String calculateKey = "calculate";

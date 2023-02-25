@@ -1,7 +1,6 @@
 import db
-import mariadb
 import domain.user as user
-import db_user as db_u
+
 
 def search_group_by_user(user: user.User):
     try:

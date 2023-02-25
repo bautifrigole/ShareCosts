@@ -1,5 +1,4 @@
 import db
-import mariadb
 import domain.user as user
 
 def create_user(user:user.User):

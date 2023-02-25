@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app/infrastructure/user_data.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
-
 import 'themes/app_theme.dart';
 
 Widget usersDropdown(BuildContext context, dynamic value, Function onChanged) {
