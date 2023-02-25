@@ -57,20 +57,25 @@ class AppAlerts {
         ]);
   }
 
-  static Column expenseInput(
-    Widget usersDropdown,
-    Function(String?) onChangedExpense,
-  ) {
+  static Column expenseInput(Widget usersDropdown,
+      Function(String?) onChangedExpense, Function(String?) onChangedExpDescr) {
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           usersDropdown,
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           CustomInputField(
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             labelText: "Expense",
             hintText: "Example: 100",
             onChanged: onChangedExpense,
+          ),
+          const SizedBox(height: 20),
+          CustomInputField(
+            labelText: "Description",
+            hintText: "Example: This is a description",
+            onChanged: onChangedExpDescr,
           )
         ]);
   }

@@ -36,8 +36,10 @@ Future<void> addUser(String name) async {
   decodeUsers(await fetchData(url));
 }
 
-Future<void> addExpense(String id, String spentMoney) async {
-  var url = "${ip + addExpenseKey}?id=$id&amount=$spentMoney&description=desc";
+Future<void> addExpense(
+    String id, String spentMoney, String expenseDesc) async {
+  var url =
+      "${ip + addExpenseKey}?id=$id&amount=$spentMoney&description=$expenseDesc";
   String data = await fetchData(url);
   decodeUsers(data);
   decodeExpenses(data);
