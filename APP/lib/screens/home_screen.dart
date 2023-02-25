@@ -33,6 +33,7 @@ class _HomeState extends State<Home> {
         children: [
           //Clean users
           FloatingActionButton(
+            heroTag: "fb1",
             onPressed: () {
               clearInfo();
               setState(() {
@@ -48,6 +49,7 @@ class _HomeState extends State<Home> {
 
           //Add expense
           FloatingActionButton(
+            heroTag: "fb2",
             child: const Icon(
               Icons.add_card,
               color: Colors.white,
@@ -79,6 +81,7 @@ class _HomeState extends State<Home> {
 
           //Add person
           FloatingActionButton(
+            heroTag: "fb3",
             child: const Icon(
               Icons.person_add,
               color: Colors.white,
@@ -93,13 +96,13 @@ class _HomeState extends State<Home> {
 
           //Move to expense screen
           FloatingActionButton(
-            heroTag: 123,
+            heroTag: "fb4",
             child: const Icon(
               Icons.arrow_forward_ios_rounded,
               color: Colors.white,
               size: 25,
             ),
-            onPressed: () => {},
+            onPressed: () => Navigator.pushNamed(context, 'expenses'),
           )
         ],
       ),
@@ -113,7 +116,8 @@ class _HomeState extends State<Home> {
         child: ListView(
           children: [
             SizedBox(height: 10),
-            expensePanel(context, Expense("Puto el que lee", User(0, "Fran gato", 0.0), 2100)),
+            expensePanel(context,
+                Expense("Puto el que lee", User(0, "Fran gato", 0.0), 2100)),
             Container(
               padding: const EdgeInsets.all(20),
               child: Column(

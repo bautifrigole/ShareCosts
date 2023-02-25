@@ -5,25 +5,22 @@ List<User> users = [];
 List<Payment> payments = [];
 List<Expense> expenses = [];
 
-void decodeUsers(String data){
+void decodeUsers(String data) {
   var tagsJson = jsonDecode(jsonDecode(data)['users']) as List;
-  users = tagsJson
-      .map((userJson) => User.fromJson(jsonDecode(userJson)))
-      .toList();
+  users =
+      tagsJson.map((userJson) => User.fromJson(jsonDecode(userJson))).toList();
 }
 
-void decodePayments(String data){
+void decodePayments(String data) {
   var tagsJson = jsonDecode(jsonDecode(data)['payments']) as List;
-  payments = tagsJson
-      .map((payJson) => Payment.fromJson(jsonDecode(payJson)))
-      .toList();
+  payments =
+      tagsJson.map((payJson) => Payment.fromJson(jsonDecode(payJson))).toList();
 }
 
-void decodeExpenses(String data){
+void decodeExpenses(String data) {
   var tagsJson = jsonDecode(jsonDecode(data)['expenses']) as List;
-  expenses = tagsJson
-      .map((expJson) => Expense.fromJson(jsonDecode(expJson)))
-      .toList();
+  expenses =
+      tagsJson.map((expJson) => Expense.fromJson(jsonDecode(expJson))).toList();
 }
 
 String listToString(List<Object> list) {
@@ -34,6 +31,6 @@ String listToString(List<Object> list) {
   return output;
 }
 
-User getUserByID(int id){
+User getUserByID(int id) {
   return users.firstWhere((u) => u.id == id);
 }
