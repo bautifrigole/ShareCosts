@@ -18,6 +18,7 @@ class _HomeState extends State<Home> {
   int id = 0;
   String name = "";
   int spentMoney = 0;
+  String expenseDesc = "";
   String output = "-";
 
   @override
@@ -30,6 +31,7 @@ class _HomeState extends State<Home> {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          //Clean users
           FloatingActionButton(
             onPressed: () {
               clearInfo();
@@ -43,6 +45,8 @@ class _HomeState extends State<Home> {
               size: 35,
             ),
           ),
+
+          //Add expense
           FloatingActionButton(
             child: const Icon(
               Icons.add_card,
@@ -55,10 +59,13 @@ class _HomeState extends State<Home> {
               AppAlerts.expenseInput(
                 usersDropdown(context, id, onChangedInputID),
                 onChangedInputSpentMoney,
+                onChangedInputSpentDesc,
               ),
               AppAlerts.addActionButtons(context, sendNewExpense),
             ),
           ),
+
+          //Calculate
           ElevatedButton(
             onPressed: sendCalculateCosts,
             child: const Padding(
@@ -69,6 +76,8 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
+
+          //Add person
           FloatingActionButton(
             child: const Icon(
               Icons.person_add,
@@ -81,6 +90,8 @@ class _HomeState extends State<Home> {
                 AppAlerts.nameInput(onChangedInputName),
                 AppAlerts.addActionButtons(context, sendNewUser)),
           ),
+
+          //Move to expense screen
           FloatingActionButton(
             heroTag: 123,
             child: const Icon(
@@ -129,9 +140,9 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> sendNewExpense() async {
-    await addExpense(id.toString(), spentMoney.toString());
+    await addExpense(id.toString(), spentMoney.toString(), expenseDesc);
     setState(() {
-      output = listToString(users);
+      output = listToString(expenses);
     });
   }
 
@@ -156,5 +167,9 @@ class _HomeState extends State<Home> {
     var val = int.tryParse(value!);
     if (val == null) return;
     spentMoney = val;
+  }
+
+  dynamic onChangedInputSpentDesc(String? value) {
+    expenseDesc = value!;
   }
 }
