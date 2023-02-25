@@ -1,4 +1,5 @@
 import 'package:app/app_alerts.dart';
+import 'package:app/screens/expenses_screen.dart';
 import 'package:app/users_dropdown.dart';
 import 'package:app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -28,19 +29,6 @@ class _HomeState extends State<Home> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           FloatingActionButton(
-              onPressed: () {
-                updateInfo();
-                setState(() {
-                  output = listToString(users);
-                });
-              },
-            child: const Icon(
-              Icons.update,
-              color: Colors.white,
-              size: 35,
-            ),
-          ),
-          FloatingActionButton(
             onPressed: () {
               clearInfo();
               setState(() {
@@ -59,13 +47,15 @@ class _HomeState extends State<Home> {
               color: Colors.white,
               size: 35,
             ),
-            onPressed: () => AppAlerts.displayDialogAndroid(context,
-                const Text("Expense"),
-                AppAlerts.expenseInput(
-                    usersDropdown(context, id, onChangedInputID),
-                    onChangedInputSpentMoney,
-                ),
-                sendNewExpense),
+            onPressed: () => AppAlerts.displayDialogAndroid(
+              context,
+              const Text("Expense"),
+              AppAlerts.expenseInput(
+                usersDropdown(context, id, onChangedInputID),
+                onChangedInputSpentMoney,
+              ),
+              AppAlerts.addActionButtons(context, sendNewExpense),
+            ),
           ),
           ElevatedButton(
             onPressed: sendCalculateCosts,
@@ -83,25 +73,45 @@ class _HomeState extends State<Home> {
               color: Colors.white,
               size: 25,
             ),
-            onPressed: () => AppAlerts.displayDialogAndroid(context,
+            onPressed: () => AppAlerts.displayDialogAndroid(
+                context,
                 const Text("New User"),
                 AppAlerts.nameInput(onChangedInputName),
-                sendNewUser),
+                AppAlerts.addActionButtons(context, sendNewUser)),
           ),
+          FloatingActionButton(
+            heroTag: 123,
+            child: const Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: Colors.white,
+              size: 25,
+            ),
+            onPressed: () => {},
+          )
         ],
       ),
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                output,
-                style: const TextStyle(fontSize: 40, color: Colors.white),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await updateInfo();
+          setState(() {
+            output = listToString(users);
+          });
+        },
+        child: ListView(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    output,
+                    style: const TextStyle(fontSize: 40, color: Colors.white),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
