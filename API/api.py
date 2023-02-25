@@ -41,7 +41,7 @@ def add_user():
 @app.route('/add_expense', methods=['GET'])
 def add_expense():
     user_id = request.args.get('id', None)
-    amount = request.args.get('balance', None)
+    amount = request.args.get('amount', None)
     description = request.args.get('description', None)
 
     try:
@@ -69,6 +69,13 @@ def add_expense():
 def calculate():
     payments.clear()
     add_payments(deepcopy(users), payments)
+    return get_dict_info()
+
+
+@app.route('/clear_balances', methods=['GET'])
+def clear_balances():
+    for user in users:
+        user.balance = 0
     return get_dict_info()
 
 

@@ -1,9 +1,9 @@
 import 'package:app/app_alerts.dart';
-import 'package:app/screens/expenses_screen.dart';
 import 'package:app/users_dropdown.dart';
 import 'package:app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:app/infrastructure/user_data.dart';
+import '../infrastructure/server.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

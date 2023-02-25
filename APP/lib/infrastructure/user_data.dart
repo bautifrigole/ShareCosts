@@ -1,43 +1,9 @@
 import 'dart:convert';
 import '../domain/domain.dart';
-import 'server.dart';
 
 List<User> users = [];
 List<Payment> payments = [];
 List<Expense> expenses = [];
-
-Future<void> updateInfo() async {
-  var url = ip + infoKey;
-  String data = await fetchData(url);
-  decodeUsers(data);
-  decodeExpenses(data);
-  decodePayments(data);
-}
-
-Future<void> clearInfo() async {
-  var url = ip + clearKey;
-  fetchData(url);
-  users.clear();
-  expenses.clear();
-  payments.clear();
-}
-
-Future<void> addUser(String name) async {
-  var url = "${ip + addUserKey}?name=$name";
-  decodeUsers(await fetchData(url));
-}
-
-Future<void> addExpense(String id, String spentMoney) async {
-  var url = "${ip + addExpenseKey}?id=$id&balance=$spentMoney&description=desc";
-  String data = await fetchData(url);
-  decodeUsers(data);
-  decodeExpenses(data);
-}
-
-Future<void> calculateCosts() async {
-  var url = ip + calculateKey;
-  decodePayments(await fetchData(url));
-}
 
 void decodeUsers(String data){
   var tagsJson = jsonDecode(jsonDecode(data)['users']) as List;
