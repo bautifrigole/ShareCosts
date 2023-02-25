@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'users_dropdown.dart';
 
 class AppAlerts {
-  static void displayDialogAndroid(
-      BuildContext context, Text? title, Widget content, Future<void> Function() function) {
+  static void displayDialogAndroid(BuildContext context, Text? title,
+      Widget content, List<Widget>? actions) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -18,25 +18,30 @@ class AppAlerts {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadiusDirectional.circular(20)),
             content: content,
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    "Cancel",
-                    style: TextStyle(color: Colors.red),
-                  )),
-              TextButton(
-                  onPressed: () {
-                    function();
-                    Navigator.pop(context);
-                    },
-                  child: Text(
-                    "Add",
-                    style: TextStyle(color: AppTheme.textPrimary),
-                  ))
-            ],
+            actions: actions,
           );
         });
+  }
+
+  static List<Widget> addActionButtons(
+      BuildContext context, Future<void> Function() function) {
+    return [
+      TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text(
+            "Cancel",
+            style: TextStyle(color: Colors.red),
+          )),
+      TextButton(
+          onPressed: () {
+            function();
+            Navigator.pop(context);
+          },
+          child: Text(
+            "Add",
+            style: TextStyle(color: AppTheme.textPrimary),
+          ))
+    ];
   }
 
   static Column nameInput(Function(String?) onChanged) {
@@ -53,9 +58,9 @@ class AppAlerts {
   }
 
   static Column expenseInput(
-      Widget usersDropdown,
-      Function(String?) onChangedExpense,
-      ) {
+    Widget usersDropdown,
+    Function(String?) onChangedExpense,
+  ) {
     return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
