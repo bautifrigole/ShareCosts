@@ -6,9 +6,9 @@ import db_group as db_g
 
 def create_payment(payment: payment.Payment):
     try:
-        user = db_u.search_user_by_ID(payment.from_user)
-        group = db_g.search_group_by_user(user)
-        sql: str = f"INSERT INTO Payment (ID_user_from,ID_user_to,ID_group,amount) VALUES ({payment.from_user},{payment.from_user},{group},{payment.amount})"
+        user: int = db_u.search_user_by_ID(payment.from_user)
+        group: str = db_g.search_group_by_user(user)
+        sql: str = f"INSERT INTO Payment (ID_user_from,ID_user_to,ID_group,amount) VALUES ({payment.from_user},{payment.from_user},'{group}',{payment.amount})"
         db.post_data(sql)
     except Exception:
         print("Error")
@@ -21,9 +21,9 @@ def search_payment_by_ID(id_payment: int):
     except Exception:
         print("Error")
 
-def search_payments_by_group(group: int):
+def search_payments_by_group(group: str):
     try:
-        sql: str = f"SELECT * FROM Payment where ID_group = {group}"
+        sql: str = f"SELECT * FROM Payment where ID_group = '{group}'"
         data = db.get_data(sql)
         return data
     except Exception:

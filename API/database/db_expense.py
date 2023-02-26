@@ -5,8 +5,8 @@ import db_group as db_g
 
 def create_expense(expense: expense.Expense):
     try:
-        group: int = db_g.search_group_by_user(expense.payer_user)
-        sql: str = f"INSERT INTO Expense (Description,ID_user,amount,ID_group) VALUES ({expense.description},{expense.payer_user},{expense.amount},{group})"
+        group: str = db_g.search_group_by_user(expense.payer_user)
+        sql: str = f"INSERT INTO Expense (Description,ID_user,amount,ID_group) VALUES ('{expense.description}',{expense.payer_user},{expense.amount},'{group}')"
         db.post_data(sql)
     except Exception:
         print("Error")
@@ -27,9 +27,9 @@ def search_expenses_by_user(user: user.User):
     except Exception:
         print("Error")
 
-def search_expenses_by_group(group: int):
+def search_expenses_by_group(group: str):
     try:
-        sql: str = f"SELECT * FROM Expense where ID_group = {group}"
+        sql: str = f"SELECT * FROM Expense where ID_group = '{group}'"
         data = db.get_data(sql)
         return data
     except Exception:

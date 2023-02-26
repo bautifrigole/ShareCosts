@@ -1,9 +1,9 @@
 import db
 import domain.user as user
 
-def create_user(user:user.User):
+def create_user(user:user.User, id_group: str):
     try:
-        sql: str = f"INSERT INTO User (ID_user,Name,ID_group) VALUES ({user.id},'{user.name}',3)"
+        sql: str = f"INSERT INTO User (ID_user,Name,ID_group) VALUES ({user.id},'{user.name}','{id_group}')"
         db.post_data(sql)
     except Exception:
         print("Error")
@@ -16,9 +16,9 @@ def search_user_by_ID(id_user: int):
     except Exception:
         print("Error")
 
-def search_users_by_group(group: int):
+def search_users_by_group(group: str):
     try:
-        sql: str = f"SELECT * from User where ID_group= {group}"
+        sql: str = f"SELECT * from User where ID_group= '{group}'"
         data = db.get_data(sql)
         return data
     except Exception:
