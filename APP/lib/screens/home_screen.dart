@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text("Calculate Costs"),
+          title: const Text("Costs Calculator"),
           backgroundColor: AppTheme.primary),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Row(
@@ -69,7 +69,18 @@ class _HomeState extends State<Home> {
 
           //Calculate
           ElevatedButton(
-            onPressed: sendCalculateCosts,
+            onPressed: () async {
+              await sendCalculateCosts();
+              AppAlerts.displayDialogAndroid(
+                  context, const Text("Calculate"), Text(output), [
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(
+                      "Ok",
+                      style: TextStyle(color: AppTheme.textPrimary),
+                    )),
+              ]);
+            },
             child: const Padding(
               padding: EdgeInsets.all(15.0),
               child: Text(
@@ -113,24 +124,16 @@ class _HomeState extends State<Home> {
             output = listToString(users);
           });
         },
-        child: ListView(
-          children: [
-            SizedBox(height: 10),
-            expensePanel(context,
-                Expense("Puto el que lee", User(0, "Fran gato", 0.0), 2100)),
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    output,
-                    style: const TextStyle(fontSize: 40, color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-          ],
+        child: ListView.separated(
+          padding: const EdgeInsetsDirectional.all(10),
+          itemBuilder: (BuildContext context, int index) {
+            return expensePanel(context, expenses[index]);
+          },
+          itemCount: expenses.length,
+          separatorBuilder: (_, __) => const Divider(
+            height: 20,
+            indent: 0,
+          ),
         ),
       ),
     );
