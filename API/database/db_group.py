@@ -1,4 +1,4 @@
-import db
+import database.db as db
 import domain.user as user
 
 
@@ -9,6 +9,8 @@ def search_group_by_user(user: user.User):
         return data[0][0]
     except Exception:
         print("Error")
+
+#TODO: exists_group(group_id: str)
 
 def insert_group(id_group: str, name: str):
     try:

@@ -1,4 +1,4 @@
-import db
+import database.db as db
 import domain.expense as expense
 import domain.user as user
 import db_group as db_g

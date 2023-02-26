@@ -1,4 +1,4 @@
-import db
+import database.db as db
 import domain.user as user
 
 def create_user(user:user.User, id_group: str):

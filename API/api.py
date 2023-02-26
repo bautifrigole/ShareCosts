@@ -1,6 +1,10 @@
 import json
+import string
+import random
 from flask import Flask, request
 from copy import deepcopy
+
+from database.db_group import insert_group
 from domain.user import User
 from domain.payment import Payment
 from domain.expense import Expense
@@ -131,6 +135,14 @@ def create_payment(from_user: User, to_user: User):
         to_user.balance = 0
 
     return Payment(from_user.id, to_user.id, amount)
+
+
+def generate_id(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.SystemRandom().choice(chars) for _ in range(size))
+
+
+group_id = generate_id() #chequear si existe ese id
+#insert_group(group_id, "Morado")
 
 
 if __name__ == '__main__':

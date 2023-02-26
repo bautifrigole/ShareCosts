@@ -1,4 +1,4 @@
-import db
+import database.db as db
 import domain.payment as payment
 import domain.user as user
 import db_user as db_u
