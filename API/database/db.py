@@ -1,28 +1,27 @@
-import mariadb
+import mysql.connector as mysql
 import sys
 
 def connect():
-
     try:
-        conn = mariadb.connect(
+        conn = mysql.connect(
             host = "localhost",
             user = "facu1",
             password = "1234",
             port = 3306,
             database = "CalculateCost"
         )
-    except mariadb.Error as e:
+    except mysql.Error as e:
         print(f"Error en la conexion de base de datos: {e}")
         sys.exit(1)
     return conn
 
 def post_data(sql: str):
     try:
-        connection: mariadb.Connection = connect()
+        connection: mysql.Connection = connect()
         connection.autocommit = False
-        cursor: mariadb.Cursor = connection.cursor()
+        cursor: mysql.Cursor = connection.cursor()
         cursor.execute(sql)
-    except mariadb.Error as e:
+    except mysql.Error as e:
         connection.rollback()
         connection.close()
         print(f"Error: {e}")
@@ -33,11 +32,11 @@ def post_data(sql: str):
 
 def get_data(sql: str):
     try:
-        connection: mariadb.Connection = connect()
-        cursor: mariadb.Cursor = connection.cursor()
+        connection: mysql.Connection = connect()
+        cursor: mysql.Cursor = connection.cursor()
         cursor.execute(sql)
         data = cursor.fetchall()
-    except mariadb.Error as e:
+    except mysql.Error as e:
         connection.close()
         print(f"Error: {e}")
     connection.close()
