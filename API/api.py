@@ -3,7 +3,6 @@ import string
 import random
 from flask import Flask, request
 from copy import deepcopy
-
 from database.db_group import insert_group
 from domain.user import User
 from domain.payment import Payment
@@ -11,6 +10,7 @@ from domain.expense import Expense
 
 app = Flask(__name__)
 d = {}
+group_ids = []
 users = []
 expenses = []
 payments = []
@@ -27,6 +27,17 @@ def clear_info():
     expenses.clear()
     payments.clear()
     return get_dict_info()
+
+
+@app.route('/add_group', methods=['GET'])
+def add_group():
+    name = request.args.get('name', None)
+    group_id = generate_id()
+    #while exists_group(group_id):
+    #    group_id = generate_id()
+    insert_group(group_id, name)
+    group_ids.append(group_id)
+    #get_group_info(group_id)
 
 
 @app.route('/add_user', methods=['GET'])
@@ -139,10 +150,6 @@ def create_payment(from_user: User, to_user: User):
 
 def generate_id(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.SystemRandom().choice(chars) for _ in range(size))
-
-
-group_id = generate_id() #chequear si existe ese id
-#insert_group(group_id, "Morado")
 
 
 if __name__ == '__main__':
