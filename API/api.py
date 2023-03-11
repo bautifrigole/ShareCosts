@@ -3,7 +3,10 @@ import string
 import random
 from flask import Flask, request
 from copy import deepcopy
-from database.db_group import insert_group
+
+from database.db_expense import search_expenses_by_group
+from database.db_group import insert_group, exists_group, get_group_info
+from database.db_user import create_user, search_users_by_group, search_user_by_ID
 from domain.user import User
 from domain.payment import Payment
 from domain.expense import Expense
@@ -18,11 +21,13 @@ payments = []
 
 @app.route('/info', methods=['GET'])
 def get_info():
+    """No parameters required. Returns info of all users, only for testing purposes."""
     return get_dict_info()
 
 
 @app.route('/clear_info', methods=['GET'])
 def clear_info():
+    """No parameters required. Removes all the info stored in arrays, only for testing purposes."""
     users.clear()
     expenses.clear()
     payments.clear()
@@ -31,33 +36,36 @@ def clear_info():
 
 @app.route('/add_group', methods=['GET'])
 def add_group():
+    """Parameters required: name. Add a group with the name specified."""
     name = request.args.get('name', None)
     group_id = generate_id()
-    #while exists_group(group_id):
-    #    group_id = generate_id()
+    while exists_group(group_id):
+        group_id = generate_id()
     insert_group(group_id, name)
     group_ids.append(group_id)
-    #get_group_info(group_id)
+    return get_group_info(group_id)
 
 
 @app.route('/add_user', methods=['GET'])
 def add_user():
+    """Parameters required: name, group_id. Add a user with the name and in the group specified."""
     name = request.args.get('name', None)
-    if name is None or exists_name(users, name):
-        return d
+    group_id = request.args.get('group_id', None)
 
-    current_id = len(users)
-    new_user = User(current_id, name)
-    users.append(new_user)
+    '''if name is None or exists_name(search_users_by_group(group_id), name):
+        return d'''
 
+    create_user(name, group_id)
     return get_dict_info()
 
 
 @app.route('/add_expense', methods=['GET'])
 def add_expense():
+    """Parameters required: id, amount, description, group_id. Add an expense."""
     user_id = request.args.get('id', None)
     amount = request.args.get('amount', None)
     description = request.args.get('description', None)
+    group_id = request.args.get('group_id', None)
 
     try:
         user_id = int(user_id)
@@ -65,9 +73,9 @@ def add_expense():
     except ValueError:
         print("Value error!")
 
-    user_index = exists_user(users, user_id)
-    if user_index is not None:
-        expenses.append(Expense(description, users[user_index], amount))
+    user_index = search_user_by_ID(user_id)
+    if user_index is not []:
+        #expenses.append(Expense(description, users[user_index], amount))
         divided_value = round(amount/len(users), 6)
         for i in range(len(users)):
             if i != user_index:
@@ -82,6 +90,7 @@ def add_expense():
 
 @app.route('/calculate', methods=['GET'])
 def calculate():
+    """No parameters required. Calculates all the payments to be done."""
     payments.clear()
     add_payments(deepcopy(users), payments)
     return get_dict_info()
@@ -89,12 +98,14 @@ def calculate():
 
 @app.route('/clear_balances', methods=['GET'])
 def clear_balances():
+    """Parameters required: group_id. Clears all the users balances in that group."""
     for user in users:
         user.balance = 0
     return get_dict_info()
 
 
 def get_dict_info():
+    # TODO: recalcular los balances de los users
     return {'users': list_to_json(users), 'expenses': list_to_json(expenses), 'payments': list_to_json(payments)}
 
 

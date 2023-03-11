@@ -5,8 +5,8 @@ def connect():
     try:
         conn = mysql.connect(
             host = "localhost",
-            user = "facu1",
-            password = "1234",
+            user = "root",
+            password = "1022",
             port = 3306,
             database = "CalculateCost"
         )
